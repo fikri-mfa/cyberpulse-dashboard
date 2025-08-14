@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Cyberpunk Dashboard — Realtime · Analytics · Alerts · Settings</title>
+    <link rel="stylesheet" href="styles.css">
+    <meta name="description" content="Cyberpunk themed dashboard with Realtime, Analytics, Alerts and Settings menus.">
+    <!-- Optional: include a modern system font stack -->
+    <style>
+    /* Fallback minimal inline font smoothing for consistent look before styles.css loads */
+    html { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+    </style>
+  </head>
+  <body>
+    <div id="app" class="app-grid">
+      <!-- Sidebar -->
+      <aside class="sidebar">
+        <div class="brand">
+          <div class="logo">
+            <!-- inline simple SVG logo -->
+            <svg width="36" height="36" viewBox="0 0 24 24" fill="none" aria-hidden>
+              <rect x="2" y="2" width="20" height="20" rx="4" fill="#0ff" opacity="0.12"></rect>
+              <path d="M4 12h16" stroke="#0ff" stroke-width="1.5" stroke-linecap="round"/>
+              <path d="M12 4v16" stroke="#ff0" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <div class="brand-text">
+            <strong>CYBERPUNK</strong>
+            <span class="muted">control</span>
+          </div>
+        </div>
+        <nav class="nav">
+          <button class="nav-item active" data-panel="realtime" aria-pressed="true">
+          <span class="icon">⚡</span>
+          <span class="label">Realtime</span>
+          </button>
+          <button class="nav-item" data-panel="analytics">
+          <span class="icon">📈</span>
+          <span class="label">Analytics</span>
+          </button>
+          <button class="nav-item" data-panel="alerts">
+          <span class="icon">🔔</span>
+          <span class="label">Alerts</span>
+          <span class="badge" id="alerts-badge">3</span>
+          </button>
+          <button class="nav-item" data-panel="settings">
+          <span class="icon">⚙️</span>
+          <span class="label">Settings</span>
+          </button>
+        </nav>
+        <div class="sidebar-footer">
+          <div class="user">
+            <div class="avatar">A</div>
+            <div class="userinfo">
+              <div class="name">Admin</div>
+              <div class="role muted">Operator</div>
+            </div>
+          </div>
+          <small class="muted">v1.0</small>
+        </div>
+      </aside>
+      <!-- Main content -->
+      <main class="main">
+        <header class="topbar">
+          <div class="topbar-left">
+            <h1 id="panel-title">Realtime</h1>
+            <div class="pill">Live</div>
+          </div>
+          <div class="topbar-right">
+            <div class="search">
+              <input type="search" id="search" placeholder="Cari..." />
+            </div>
+            <button id="themeToggle" class="icon-btn" title="Toggle theme">🌓</button>
+          </div>
+        </header>
+        <section class="content">
+          <!-- Realtime panel -->
+          <section id="panel-realtime" class="panel active-panel" role="region" aria-label="Realtime">
+            <div class="grid-2">
+              <div class="card">
+                <h3>Network Throughput</h3>
+                <canvas id="throughputChart" width="600" height="240"></canvas>
+                <div class="meta">Updated: <span id="throughput-ts">--:--:--</span></div>
+              </div>
+              <div class="card stacked">
+                <h3>Live Nodes</h3>
+                <ul id="nodesList" class="list">
+                  <!-- populated by JS -->
+                </ul>
+                <div class="controls">
+                  <button id="simulateBtn" class="btn">Simulate Event</button>
+                </div>
+              </div>
+            </div>
+            <div class="grid-3">
+              <div class="small-card">
+                <h4>CPU</h4>
+                <div class="stat" id="cpuStat">--%</div>
+              </div>
+              <div class="small-card">
+                <h4>Memory</h4>
+                <div class="stat" id="memStat">--%</div>
+              </div>
+              <div class="small-card">
+                <h4>Latency</h4>
+                <div class="stat" id="latStat">-- ms</div>
+              </div>
+            </div>
+          </section>
+          <!-- Analytics panel -->
+          <section id="panel-analytics" class="panel" role="region" aria-label="Analytics">
+            <div class="card">
+              <h3>Traffic Overview</h3>
+              <canvas id="trafficChart" width="900" height="300"></canvas>
+              <div class="meta">Range:
+                <select id="analytics-range">
+                  <option value="1">1h</option>
+                  <option value="6">6h</option>
+                  <option value="24" selected>24h</option>
+                  <option value="168">7d</option>
+                </select>
+              </div>
+            </div>
+            <div class="card">
+              <h3>Top Sources</h3>
+            <ul id="topSources" class="list"></ul>
+          </div>
+        </section>
+        <!-- Alerts panel -->
+        <section id="panel-alerts" class="panel" role="region" aria-label="Alerts">
+          <div class="card">
+            <h3>Active Alerts</h3>
+            <ul id="alertsList" class="alerts-list">
+              <!-- populated by JS -->
+            </ul>
+          </div>
+          <div class="card">
+            <h3>Alert Settings</h3>
+            <label class="switch">
+              <input type="checkbox" id="alerts-enable" checked>
+              <span class="slider"></span>
+            </label>
+            <div class="muted">Enable push notifications</div>
+          </div>
+        </section>
+        <!-- Settings panel -->
+        <section id="panel-settings" class="panel" role="region" aria-label="Settings">
+          <div class="card">
+            <h3>Appearance</h3>
+            <div class="setting-row">
+              <label>Accent Color</label>
+              <input type="color" id="accentColor" value="#00ffd5">
+            </div>
+            <div class="setting-row">
+              <label>Compact Mode</label>
+              <input type="checkbox" id="compactMode">
+            </div>
+          </div>
+          <div class="card">
+            <h3>Account</h3>
+            <div class="setting-row">
+              <label>Username</label>
+              <input type="text" id="username" value="admin">
+            </div>
+            <div class="setting-row">
+              <label>API Key</label>
+              <input type="text" id="apiKey" placeholder="••••••••••">
+            </div>
+            <div class="controls">
+              <button id="saveSettings" class="btn primary">Save</button>
+            </div>
+          </div>
+        </section>
+      </section>
+      <footer class="footer muted">
+        © Cyberpunk Dashboard — Built for demo
+      </footer>
+    </main>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>
